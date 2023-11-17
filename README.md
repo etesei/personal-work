@@ -1,2 +1,2 @@
 # personal-work
-hosts my personal python projects
+hosts the code for the Massimo project

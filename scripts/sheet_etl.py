@@ -17,8 +17,6 @@ def read_excel_update(file_path):
         print(sheet +' Running')
         sheet_ex_data = pd.read_excel(file_path,usecols='A:J',sheet_name = sheet)
 
-        
-
         for i in range(10):
             non_null_count = sheet_ex_data.iloc[i].notnull().sum()
             if non_null_count > 3:  # arbitrary threshold to find the starting row
@@ -94,13 +92,8 @@ def read_excel_update(file_path):
     #send the CSV out to the data tab
     sheet_data_concat.to_csv('../data/output.csv')
 
-    
-    
-
-
+  
 read_excel_update('../data/BTM SALES REPORT 11.5.2023.xlsx')
 
-def create_function_that_prints_things():
-    print('hello world')
-    
 
+    

@@ -67,8 +67,7 @@ def initialize_chat_gpt_thread(client):
 def initialize_chat_gpt_run(client, thread, assistant):
     run = client.beta.threads.runs.create(
     thread_id=thread.id,
-    assistant_id=assistant.id,
-    instructions="Have a fun time"
+    assistant_id=assistant.id
     )
     return run
 

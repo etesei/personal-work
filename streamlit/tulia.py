@@ -4,7 +4,7 @@ import os
 import random
 import json
 import numpy as np
-import urllib.parse
+import time
 
 from bokeh.layouts import row, column
 from bokeh.models import ColumnDataSource, CustomJS, Slider, Div, RangeSlider, Legend, Span, HoverTool
@@ -24,6 +24,7 @@ from chat_gpt import *
 # client = OpenAI()
 
 #code this as a template for all of the restaurants
+
 
 def set_up_page():
     """
@@ -61,6 +62,14 @@ def create_time_series(df,
 
     return p
 
+def initialize_gpt_wrapper():
+    client = initialize_chat_gpt_client()
+    file = add_file(client,'tulia.csv')
+    massimo = initialize_chat_gpt_massimo_agent(client,file,"Your name is Massimo - You are an italian restaurant expert, who enjoys analyzing restaurant business data, improving the business, and talking about all things italiang restaurants")
+    thread = initialize_chat_gpt_thread(client)
+
+    return client, thread, massimo
+
 
 
   
@@ -86,26 +95,87 @@ if __name__  == '__main__':
 
     st.image('../data/massimo_headshot.png')
 
+    #initialize refresh button
+    new_query_button = st.button('Request a new response from Massimo')
+    refresh_button = st.button('Refresh Massimo Responses')
+    
     #initialize chat gpt functions
-    client = initialize_chat_gpt_client()
-    file = add_file(client,'tulia.csv')
-    massimo = initialize_chat_gpt_massimo_agent(client,file,"Your name is Massimo - You are an italian restaurant expert, who enjoys analyzing restaurant business data, improving the business, and talking about all things italiang restaurants")
-    thread = initialize_chat_gpt_thread(client)
+    if 'chatbot' not in st.session_state:
+        st.session_state.chatbot = initialize_gpt_wrapper()
+    
+    client, thread, massimo = st.session_state.chatbot
+
     #create massimo placeholder
     massimo_output = st.empty()
 
-    if user_input!='Enter a message to Massimo':
+    #submit a response, and return the latest thread output
+    #if the refresh button is clicked, then return the latest thread output without rerunning a new response
+    #maybe we also have a "new query" option, where we also gate that
 
-    #if new text is entered then run add_message and fetch_messages
+    if new_query_button:
         message = add_message(client,thread,user_input)
-        run = initialize_chat_gpt_run(client,thread,massimo)
-        message_thread = fetch_messages(client,thread)
+        run = initialize_chat_gpt_run(client, thread, massimo)
+        #add run to a session state
+        st.session_state.run = run
+        st.text('Preparing answer...')
+        time.sleep(1)
+        
+        run = client.beta.threads.runs.retrieve(
+                thread_id=thread.id,
+                run_id=run.id
+                )
+        
+        message_thread = fetch_messages(client, thread)
 
-        massimo_output.text(message_thread.data[0].content[1].text.value)
-    else:
-        'Hi I am Massimo! Enter a message above to chat with me!'
-       
+        response_body = ''
+        
+        if message_thread: 
+            message_list = message_thread.data
+            #reverse the order of message_list
+            message_list.reverse()
+            for i in range(len(message_list)):
 
+
+
+                if message_list[i].role == 'assistant':
+                    st.markdown(f'<p style="color: green;">Massimo: {message_list[i].content[0].text.value}</p>', unsafe_allow_html=True)
+                else:
+                    st.markdown(f'<p style="color: blue;">User: {message_list[i].content[0].text.value}</p>', unsafe_allow_html=True)
+
+            st.text(response_body)
+    
+
+
+    if refresh_button:
+        st.session_state.run = client.beta.threads.runs.retrieve(
+                thread_id=thread.id,
+                run_id=st.session_state.run.id
+                )
+        message_thread = fetch_messages(client, thread)
+
+        response_body = ''
+        
+        if message_thread: 
+            message_list = message_thread.data
+            #reverse the order of message_list
+            message_list.reverse()
+            for i in range(len(message_list)):
+                if message_list[i].role == 'assistant':
+                    response_body = response_body + 'Massimo: ' + message_list[i].content[0].text.value + '\n'
+                else:
+                    response_body = response_body + 'User: ' + message_list[i].content[0].text.value + '\n'
+
+            st.text(response_body)
+
+
+
+    def create_matplotlib_chart():
+        import matplotlib.pyplot as plt
+        import numpy as np
+
+        x = np.linspace(0, 20, 100)
+        plt.plot(x, np.sin(x))
+        plt.show()
 
 
 

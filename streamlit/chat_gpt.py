@@ -20,6 +20,7 @@ from bokeh.palettes import Category20 as palette
 from data_api import get_file_paths, get_tidy_excel_data
 
 from openai import OpenAI
+import os
 
 
 #these functions are to initialize a chat gpt agent to talk to the user on the page
@@ -30,8 +31,8 @@ from openai import OpenAI
 
 
 def initialize_chat_gpt_client():
-
-    client = OpenAI(api_key= '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')
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    client = OpenAI(api_key= OPENAI_API_KEY)
 
     return client
 

@@ -79,7 +79,7 @@ if __name__  == '__main__':
     user_name = st.text_input('Enter your name!')
     
     #cached df pull
-    df = get_tidy_excel_data('../data/BTM SALES REPORT 11.5.2023.xlsx')
+    df = get_tidy_excel_data('data/BTM SALES REPORT 11.5.2023.xlsx')
     df.to_csv('tulia.csv',index=False)
 
     #print the dataframe to the webpage
@@ -93,7 +93,7 @@ if __name__  == '__main__':
     #create a text box for users to enter prompts to Massimo, the chat gpt assistant
     user_input = st.text_input('Enter a message to Massimo')
 
-    st.image('../data/massimo_headshot.png')
+    st.image('data/massimo_headshot.png')
 
     #initialize refresh button
     new_query_button = st.button('Request a new response from Massimo')

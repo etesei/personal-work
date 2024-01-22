@@ -50,7 +50,7 @@ def get_tidy_excel_data(file_path):
         # We need to transpose the DataFrame to get dates as rows and categories as columns
 
         # Extracting the relevant data (excluding the total column for now)
-        if file_path == 'data/tulia_data.xlsx':
+        if file_path == '/Users/evan.tesei/personal-work/streamlit/data/tulia_data.xlsx':
             date_index_val = 0
         else:
             date_index_val = 1

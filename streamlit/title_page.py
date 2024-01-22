@@ -19,19 +19,13 @@ def set_up_page():
     """
   
     st.set_page_config(
-     page_title="Ex-stream-ly Cool App",
-     page_icon="🧊",
-     layout="wide",
-     initial_sidebar_state="expanded",
-     menu_items={
-         'Get Help': 'https://www.extremelycoolapp.com/help',
-         'Report a bug': "https://www.extremelycoolapp.com/bug",
-         'About': "# This is a header. This is an *extremely* cool app!"
-     }
- )
-    st.title('_:green[Bonjourno]_, Welcome to the Campaña Group Performance Hub :sunglasses:')
+    page_title="Hello",
+    page_icon="👋",
+)
 
-    st.title('This Site is a place to come view latest performance, predictions, and reviews. Interact with performance data, ask it questions, and even chat with Massimo - your personal AI assistant who is an expert in all things Naples, Tulia, and Italy')
+    st.write("# Welcome to Streamlit! 👋")
+
+    st.sidebar.success("Select a demo above.")
 
 if __name__  == '__main__':
     set_up_page()

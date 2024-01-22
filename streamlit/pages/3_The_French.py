@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+import sys
 import random
 import json
 import numpy as np
@@ -16,9 +17,10 @@ from bokeh.palettes import inferno, Category20, all_palettes
 from bokeh.transform import dodge
 from bokeh.palettes import Category20 as palette
 
+sys.path.insert(0,'/Users/evan.tesei/personal-work/streamlit')
+
 from data_api import get_file_paths, get_tidy_excel_data
 from chat_gpt import *
-
 
 # from openai import OpenAI
 # client = OpenAI()
@@ -41,7 +43,7 @@ def set_up_page():
          'About': "# This is a header. This is an *extremely* cool app!"
      }
  )
-    st.title('Osteria Tulia Section')
+    st.title('The French')
 
 def create_time_series(df,
                        metric):
@@ -79,9 +81,7 @@ if __name__  == '__main__':
     user_name = st.text_input('Enter your name!')
     
     #cached df pull
-    df = get_tidy_excel_data('data/BTM SALES REPORT 11.5.2023.xlsx')
-    df.to_csv('tulia.csv',index=False)
-
+    df = get_tidy_excel_data('/Users/evan.tesei/personal-work/streamlit/data/the_french_data.xlsx')
     #print the dataframe to the webpage
     st.write(df.sort_values('date',ascending=False))
 
@@ -93,7 +93,7 @@ if __name__  == '__main__':
     #create a text box for users to enter prompts to Massimo, the chat gpt assistant
     user_input = st.text_input('Enter a message to Massimo')
 
-    st.image('data/massimo_headshot.png')
+    st.image('/Users/evan.tesei/personal-work/streamlit/assets/massimo_headshot.png')
 
     #initialize refresh button
     new_query_button = st.button('Request a new response from Massimo')
